@@ -1,114 +1,99 @@
-const DB = require('../models/Database');
+const DB = require('../models/Database')
 
 module.exports = {
-  getById(id) {
+  getById (id) {
     return DB.accessor.query(
-      'SELECT * FROM alliances WHERE id = ${allianceID}',
-      { allianceID: id }
+      `SELECT * FROM alliances WHERE id = ${id}`
     )
       .then((result) => {
         if (result.length === 0) {
-          throw 'ALLIANCE NOT_FOUND';
+          throw new Error('ALLIANCE NOT_FOUND')
         }
         return result[ 0 ]
       })
       .catch((error) => {
-        throw error;
+        throw error
       })
   },
 
-  getAll() {
+  getAll () {
     return DB.accessor.query('SELECT * FROM alliances')
       .then((result) => {
-        return result;
+        return result
       })
       .catch((error) => {
-        throw error;
+        throw error
       })
   },
 
-  create(name) {
+  create (name) {
     return DB.accessor.query(
-      'INSERT INTO alliances(name) VALUES(${name}) RETURNING *',
-      {
-        name: name
-      })
+      `INSERT INTO alliances(name) VALUES(${name}) RETURNING *`)
       .then((result) => {
         if (result.length === 0) {
-          throw 'ALLIANCE NOT CREATED';
+          throw new Error('ALLIANCE NOT CREATED')
         }
         return result[ 0 ]
       })
       .catch((error) => {
-        throw error;
+        throw error
       })
   },
 
-  delete(id) {
-    return DB.accessor.query('DELETE FROM alliances WHERE id = ${allianceID}',
-      { allianceID: id })
+  delete (id) {
+    return DB.accessor.query(`DELETE FROM alliances WHERE id = ${id}`)
       .then((result) => {
-        return result;
+        return result
       })
       .catch((error) => {
-        throw error;
+        throw error
       })
   },
 
-  update(id, name) {
-    return DB.accessor.query('UPDATE alliances SET name = ${name} WHERE id = ${allianceID} RETURNING *',
-      {
-        allianceID: id,
-        name: name
-      })
+  update (id, name) {
+    return DB.accessor.query(`UPDATE alliances SET name = ${name} WHERE id = ${id} RETURNING *`)
       .then((result) => {
         if (result.length === 0) {
-          throw 'ALLIANCE NOT_FOUND';
+          throw new Error('ALLIANCE NOT_FOUND')
         }
         return result[ 0 ]
       })
       .catch((error) => {
-        throw error;
+        throw error
       })
   },
 
-  getUsers(allianceID) {
+  getUsers (allianceID) {
     return DB.accessor.query(
-      'SELECT * FROM users WHERE alliance_id = ${allianceID}',
-      { allianceID: allianceID })
+      `SELECT * FROM users WHERE alliance_id = ${allianceID}`)
       .then((result) => {
-        return result;
+        return result
       })
       .catch((error) => {
-        throw error;
+        throw error
       })
   },
 
-  getCharacters(allianceID) {
+  getCharacters (allianceID) {
     return DB.accessor.query(
-      'SELECT characters.* FROM characters INNER JOIN users ON characters.user_id = users.id WHERE users.alliance_id = ${allianceID}',
-      { allianceID: allianceID })
+      `SELECT characters.* FROM characters INNER JOIN users ON characters.user_id = users.id WHERE users.alliance_id = ${allianceID}`)
       .then((result) => {
-        return result;
+        return result
       })
       .catch((error) => {
-        throw error;
+        throw error
       })
   },
 
-  getCharactersWithClass(allianceID, characterClass) {
+  getCharactersWithClass (allianceID, characterClass) {
     return DB.accessor.query(
-      'SELECT characters.* FROM characters INNER JOIN users ON characters.user_id = users.id WHERE users.alliance_id = ${allianceID} AND characters.class = ${characterClass}',
-      {
-        allianceID: allianceID,
-        characterClass: characterClass
-      })
+      `SELECT characters.* FROM characters INNER JOIN users ON characters.user_id = users.id WHERE users.alliance_id = ${allianceID} AND characters.class = ${characterClass}`)
       .then((result) => {
-        return result;
+        return result
       })
       .catch((error) => {
-        throw error;
+        throw error
       })
-  },
+  }
 
-};
+}

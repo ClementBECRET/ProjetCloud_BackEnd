@@ -1,80 +1,70 @@
-const DB = require('../models/Database');
-const rad2deg = require('rad2deg');
-const deg2rad = require('deg2rad');
+const DB = require('../models/Database')
+const rad2deg = require('rad2deg')
+const deg2rad = require('deg2rad')
 
 module.exports = {
-  getById(id) {
+  getById (id) {
     return DB.accessor.query(
-      'SELECT * FROM characters WHERE id = ${characterID}',
-      { characterID: id }
-    )
+      `SELECT * FROM characters WHERE id = ${id}`)
       .then((result) => {
         if (result.length === 0) {
-          throw 'CHARACTER NOT_FOUND';
+          throw new Error('CHARACTER NOT_FOUND')
         }
         return result[ 0 ]
       })
       .catch((error) => {
-        throw error;
+        throw error
       })
   },
 
-  getAll() {
+  getAll () {
     return DB.accessor.query('SELECT * FROM characters')
       .then((result) => {
-        return result;
+        return result
       })
       .catch((error) => {
-        throw error;
+        throw error
       })
   },
 
-  create(name, characterClass, position, user_id) {
+  create (name, characterClass, position, userID) {
     return DB.accessor.query(
-      'INSERT INTO characters(name, class, position, user_id) VALUES(${name},${characterClass},point(${x},${y}) ,${user_id}) RETURNING *',
+      `INSERT INTO characters(name, class, position, user_id) VALUES(${name},${characterClass},point(${x},${y}) ,${userID}) RETURNING *`,
       {
-        name: name,
-        characterClass: characterClass,
         x: position.x,
-        y: position.y,
-        user_id: user_id
+        y: position.y
       }
     )
       .then((result) => {
         if (result.length === 0) {
-          throw 'CHARACTER NOT CREATED';
+          throw new Error('CHARACTER NOT CREATED')
         }
         return result[ 0 ]
       })
       .catch((error) => {
-        throw error;
+        throw error
       })
   },
 
-  delete(id) {
-    return DB.accessor.query('DELETE FROM characters WHERE id = ${characterID}',
-      { characterID: id })
+  delete (id) {
+    return DB.accessor.query(`DELETE FROM characters WHERE id = ${id}`)
       .then((result) => {
-        return result;
+        return result
       })
       .catch((error) => {
-        throw error;
+        throw error
       })
   },
 
-  update(id, name, characterClass, position, user_id) {
-    return DB.accessor.query('UPDATE characters SET name = ${name}, class = ${characterClass}, position = point(${x},${y}), user_id = ${user_id} WHERE id = ${characterID} RETURNING *',
+  update (id, name, characterClass, position, userID) {
+    return DB.accessor.query(`UPDATE characters SET name = ${name}, class = ${characterClass}, position = point(${x},${y}), user_id = ${userID} WHERE id = ${id} RETURNING *`,
       {
-        characterID: id,
-        name: name,
-        characterClass: characterClass,
         x: position.x,
-        y: position.y,
-        user_id: user_id
+        y: position.y
       })
       .then((result) => {
         if (result.length === 0) {
-          throw 'CHARACTER NOT_FOUND';
+          throw new Error('CHARACTER NOT_FOUND')
         }
         return result[ 0 ]
       })
